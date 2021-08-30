@@ -30,7 +30,7 @@ public class UsuarioController {
     @Autowired
     private CoordinateService coordinateService;
     
-    private static final String MAPS_KEY = "AIzaSyAzXJTthZ-4MMQfiVSSfM9k1BP_5YjoEzo";
+    private static final String MAPS_KEY = "${key}";
     private static final String SCHEME = "https";
     private static final String HOST = "maps.googleapis.com";
     private static final String PATH = "/maps/api/directions/json";
@@ -47,6 +47,7 @@ public class UsuarioController {
         }
 
     }
+
     @GetMapping("/usuarios")
     public ResponseEntity<List<Usuario>> ListarUsuario(){
         return usuarioService.ListarUsuarios();
@@ -99,11 +100,11 @@ public class UsuarioController {
              }
              catch (ModoPercursoInvalidoException e)
              {
-                 e.printStackTrace();
+                    return  ResponseEntity.badRequest().build();
              }
              catch (UsuarioNaoEncontradoException e)
              {
-                 e.printStackTrace();
+                   return ResponseEntity.notFound().build();
              }
 
 
