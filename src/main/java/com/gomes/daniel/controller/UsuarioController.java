@@ -7,7 +7,7 @@ import com.gomes.daniel.domain.model.Percurso;
 import com.gomes.daniel.domain.model.Usuario;
 import com.gomes.daniel.service.CoordinateService;
 import com.gomes.daniel.service.UsuarioService;
-
+//
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
