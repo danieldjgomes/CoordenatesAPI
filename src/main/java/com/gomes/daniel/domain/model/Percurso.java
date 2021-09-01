@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -13,7 +14,7 @@ import java.util.List;
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @AllArgsConstructor
 @NoArgsConstructor
-public class Percurso {
+public class Percurso implements Serializable {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -26,7 +27,13 @@ public class Percurso {
 
     @NonNull
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
     private ModoPercurso modoPercurso;
+
+    @NonNull
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private SentidoPercurso sentidoPercurso;
 
     @ManyToOne
     @NonNull
@@ -34,25 +41,25 @@ public class Percurso {
     private Usuario usuario;
 
     @NonNull
+    @Column(nullable = false)
     private String enderecoOrigem;
 
     @NonNull
+    @Column(nullable = false)
     private String enderecoDestino;
 
     @NonNull
-    private LocalTime horarioOrigem;
-
-    @NonNull
-    private LocalTime horarioDestino;
+    @Column(nullable = false)
+    private LocalTime horario;
 
 
-    public Percurso(@NonNull List<Coordinate> pontos, @NonNull ModoPercurso modoPercurso, @NonNull String enderecoOrigem, @NonNull String enderecoDestino, Usuario usuario, LocalTime horarioOrigem, LocalTime horarioDestino) {
+    public Percurso(@NonNull List<Coordinate> pontos, @NonNull ModoPercurso modoPercurso, @NonNull String enderecoOrigem, @NonNull String enderecoDestino, Usuario usuario, LocalTime horarioOrigem, SentidoPercurso sentidoPercurso) {
         this.pontos = pontos;
         this.modoPercurso = modoPercurso;
         this.enderecoOrigem = enderecoOrigem;
         this.enderecoDestino = enderecoDestino;
         this.usuario = usuario;
-        this.horarioOrigem = horarioOrigem;
-        this.horarioDestino = horarioDestino;
+        this.horario = horarioOrigem;
+        this.sentidoPercurso = sentidoPercurso;
     }
 }

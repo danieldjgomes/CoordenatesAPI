@@ -13,16 +13,12 @@ public enum ModoPercurso {
 
     public static ModoPercurso stringToModo(String modo) throws ModoPercursoInvalidoException {
 
-        switch (modo){
-            case "walking":
-                return ModoPercurso.ANDANDO;
-            case "driving":
-                return ModoPercurso.DIRIGINDO;
-            case "transit":
-                return ModoPercurso.TRANSPORTE_PUBLICO;
-
-        }
-        throw new ModoPercursoInvalidoException("Erro! Modo de Percurso inserido é inválido.");
+        return switch (modo) {
+            case "walking" -> ModoPercurso.ANDANDO;
+            case "driving" -> ModoPercurso.DIRIGINDO;
+            case "transit" -> ModoPercurso.TRANSPORTE_PUBLICO;
+            default -> throw new ModoPercursoInvalidoException("Erro! Modo de Percurso inserido é inválido.");
+        };
     }
 
 

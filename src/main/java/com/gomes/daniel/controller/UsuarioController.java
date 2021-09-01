@@ -1,15 +1,18 @@
 package com.gomes.daniel.controller;
 
 import com.gomes.daniel.domain.exception.ModoPercursoInvalidoException;
+import com.gomes.daniel.domain.exception.SentidoPercursoException;
 import com.gomes.daniel.domain.exception.UsuarioNaoEncontradoException;
 import com.gomes.daniel.domain.model.ModoPercurso;
 import com.gomes.daniel.domain.model.Percurso;
+import com.gomes.daniel.domain.model.SentidoPercurso;
 import com.gomes.daniel.domain.model.Usuario;
 import com.gomes.daniel.service.CoordinateService;
 import com.gomes.daniel.service.UsuarioService;
 
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,6 +20,8 @@ import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
+import javax.persistence.PersistenceException;
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalTime;
 import java.util.List;
 
@@ -35,21 +40,28 @@ public class UsuarioController {
     private static final String HOST = "maps.googleapis.com";
     private static final String PATH = "/maps/api/directions/json";
 
+
+    @GetMapping("/usuarios")
+    public ResponseEntity<List<Usuario>> ListarUsuario(){
+        return usuarioService.ListarUsuarios();
+    }
+
     @PostMapping("/usuarios")
     public ResponseEntity<Usuario> SalvarUsuario(@RequestBody Usuario usuario){
 
         try {
             Usuario usuarioPersistido = usuarioService.SalvarUsuario(usuario);
                 return ResponseEntity.ok(usuarioPersistido);
+                
         } catch (UsuarioNaoEncontradoException e) {
             e.printStackTrace();
                 return ResponseEntity.badRequest().build();
+                
+        } catch (DataIntegrityViolationException e){
+            e.printStackTrace();
+                return ResponseEntity.status(HttpStatus.CONFLICT).build();
         }
 
-    }
-    @GetMapping("/usuarios")
-    public ResponseEntity<List<Usuario>> ListarUsuario(){
-        return usuarioService.ListarUsuarios();
     }
 
     @PostMapping("usuarios/{playerID}")
@@ -58,57 +70,21 @@ public class UsuarioController {
             @RequestParam String origin,
             @RequestParam String destination,
             @RequestParam String mode,
-            @RequestParam LocalTime horarioOrigem,
-            @RequestParam LocalTime horarioDestino)
-    {
-    	UriComponents uriComponents = UriComponentsBuilder.newInstance()
-    			.scheme(SCHEME)
-    			.host(HOST)
-    			.path(PATH)
-    			.query("origin={origin}")
-                .query("destination={destination}")
-                .query("mode={mode}")
-                .query("key={key}")
-                .buildAndExpand(origin,destination,mode,MAPS_KEY);
-    	
-    	 RestTemplate restTemplate = new RestTemplate();
-         ResponseEntity<Object> responseEntity = restTemplate.getForEntity(uriComponents.toUri(), Object.class);
-        
-         
-         if (responseEntity.getStatusCode() == HttpStatus.OK) {
+            @RequestParam String sentido,
+            @RequestParam LocalTime horario
+           ) {
 
-             try
-             {
-                 Usuario usuario = usuarioService.BuscarUsuario(playerID);
-                 String polyline = StringUtils.substringBetween(responseEntity.toString(), "overview_polyline={points=", "},");
-                 ModoPercurso modo = ModoPercurso.stringToModo(mode);
+        try {
+            return ResponseEntity.ok(usuarioService.SalvarPercurso(playerID, origin, destination, mode, sentido, horario, SCHEME, HOST, PATH, MAPS_KEY));
 
-                 if(modo != null){
-                     Percurso percurso = new Percurso (coordinateService.listCoord(polyline),
-                             modo,
-                             origin,
-                             destination,
-                             usuario,
-                             horarioOrigem,
-                             horarioDestino);
-                     usuario.getPercursos().add(percurso);
-                     return ResponseEntity.ok(usuarioService.SalvarUsuario(usuario));
-                 }
+        } catch (DataIntegrityViolationException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.CONFLICT).build();
 
-
-             }
-             catch (ModoPercursoInvalidoException e)
-             {
-                 e.printStackTrace();
-             }
-             catch (UsuarioNaoEncontradoException e)
-             {
-                 e.printStackTrace();
-             }
-
-
-         }
-         return  ResponseEntity.notFound().build();
+        } catch (UsuarioNaoEncontradoException | SentidoPercursoException | ModoPercursoInvalidoException e) {
+            e.printStackTrace();
+            return ResponseEntity.badRequest().build();
+        }
     }
 
     @GetMapping("usuarios/proximos/{usuarioID}/{percursoID}")

@@ -1,6 +1,6 @@
 package com.gomes.daniel.domain.model;
 
-public enum TipoUsuario {
+public enum ModoLocomocao {
 
     MOTORISTA,PEDESTRE
 }

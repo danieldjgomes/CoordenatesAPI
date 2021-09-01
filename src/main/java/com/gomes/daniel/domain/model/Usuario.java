@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.*;
+import javax.validation.constraints.Pattern;
 
 @Data
 @Entity
@@ -24,32 +25,25 @@ public class Usuario implements Serializable {
     @GeneratedValue(strategy=GenerationType.IDENTITY)
 	@Column
     private Long id;
-	
-	@Column
+
+    @Column(nullable = false)
     private String nome;
 
+    @Column(nullable = false)
+    private String sobrenome;
+
     @Email
-    @Column
+    @Column(nullable = false, unique = true)
     private String email;
 
-    @OneToMany(cascade= CascadeType.ALL)
-    @OrderColumn
-    @JsonIgnore
+    @Pattern(regexp = "\\d{11}")
+    @Column(nullable = false, unique = true)
+    private String telefone;
 
-    private List<Percurso> percursos = new ArrayList<>();
+    @Column(nullable = false)
+    private Sexo sexo;
 
-    @Enumerated(EnumType.STRING)
-    @NonNull
-    @Column
-    private TipoUsuario tipoUsuario;
-
-    @NonNull
-    @Column
-    private Long toleranciaDistancia;
-
-    @NonNull
-    @Column
-    private LocalTime toleranciaTempo;
-
+    @Embedded
+    private Preferencias preferencias;
 
 }
