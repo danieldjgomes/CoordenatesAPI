@@ -1,14 +1,10 @@
 package com.gomes.daniel.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import lombok.NoArgsConstructor;
 import java.io.Serializable;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-
 import javax.persistence.*;
 import javax.validation.constraints.Pattern;
 

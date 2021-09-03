@@ -1,7 +1,7 @@
 package com.gomes.daniel.domain.model;
 
-import com.gomes.daniel.domain.exception.ModoPercursoInvalidoException;
-import com.gomes.daniel.domain.exception.SentidoPercursoException;
+
+import com.gomes.daniel.domain.exception.SentidoPercursoInvalidoException;
 
 
 public enum SentidoPercurso {
@@ -11,12 +11,12 @@ public enum SentidoPercurso {
     SentidoPercurso() {
     }
 
-    public static SentidoPercurso stringToPercurso(String modo) throws SentidoPercursoException {
+    public static SentidoPercurso stringToPercurso(String modo) throws SentidoPercursoInvalidoException {
 
         return switch (modo) {
             case "casa" -> SentidoPercurso.CASA;
             case "destino" -> SentidoPercurso.DESTINO;
-            default -> throw new SentidoPercursoException("Erro! Modo de Percurso inserido é inválido.");
+            default -> throw new SentidoPercursoInvalidoException("Erro! Modo de Percurso inserido é inválido.");
         };
     }
 

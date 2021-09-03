@@ -1,21 +1,11 @@
-package com.gomes.daniel.controller;
+package com.gomes.daniel.api.controller;
 
-import com.gomes.daniel.domain.model.Coordinate;
-import com.gomes.daniel.domain.model.ModoPercurso;
-import com.gomes.daniel.domain.model.Percurso;
 import com.gomes.daniel.domain.repository.PercursoRepository;
 import com.gomes.daniel.service.CoordinateService;
 
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.*;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.util.UriComponents;
-import org.springframework.web.util.UriComponentsBuilder;
 
 @RestController
 @Controller
