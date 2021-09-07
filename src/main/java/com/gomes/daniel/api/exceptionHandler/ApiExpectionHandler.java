@@ -1,9 +1,6 @@
 package com.gomes.daniel.api.exceptionHandler;
 
-import com.gomes.daniel.domain.exception.EntidadeEmUsoException;
-import com.gomes.daniel.domain.exception.EntidadeNaoEncontradaException;
-import com.gomes.daniel.domain.exception.NegocioException;
-import com.gomes.daniel.domain.exception.RecursoMalInseridoException;
+import com.gomes.daniel.domain.exception.*;
 import org.springframework.beans.factory.parsing.Problem;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,6 +10,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 
+import java.sql.SQLIntegrityConstraintViolationException;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
@@ -51,6 +49,14 @@ public class ApiExpectionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> trataEntidadeEmUsoException  (EntidadeEmUsoException ex, WebRequest webRequest){
         return handleExceptionInternal(ex,ex.getMessage(),new HttpHeaders(),HttpStatus.CONFLICT, webRequest);
     }
+
+    @ExceptionHandler(EntidadeDuplicadaException.class)
+    public ResponseEntity<?> trataEntidadeDuplicadaException  (EntidadeDuplicadaException ex, WebRequest webRequest){
+        return handleExceptionInternal(ex,ex.getMessage(),new HttpHeaders(),HttpStatus.CONFLICT, webRequest);
+    }
+
+    //SQLIntegrityConstraintViolationException
+
 
 
 

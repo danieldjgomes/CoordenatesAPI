@@ -1,6 +1,5 @@
 package com.gomes.daniel.domain.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
@@ -23,7 +22,8 @@ public class Percurso implements Serializable {
 
     @NonNull
     @OneToMany(cascade=CascadeType.ALL)
-    private List<Coordinate> pontos;
+    @JoinTable
+    private List<Coordenada> pontos;
 
     @NonNull
     @Enumerated(EnumType.STRING)
@@ -35,31 +35,24 @@ public class Percurso implements Serializable {
     @Column(nullable = false)
     private SentidoPercurso sentidoPercurso;
 
+    @NonNull
+    @Column(nullable = false)
+    private String enderecoCasa;
+
     @ManyToOne
-    @NonNull
-    @JsonIgnore
-    private Usuario usuario;
-
-    @NonNull
-    @Column(nullable = false)
-    private String enderecoOrigem;
-
-    @NonNull
-    @Column(nullable = false)
-    private String enderecoDestino;
+    @JoinColumn(name = "destino_id", nullable = false)
+    private Destino destino;
 
     @NonNull
     @Column(nullable = false)
     private LocalTime horario;
 
-
-    public Percurso(@NonNull List<Coordinate> pontos, @NonNull ModoPercurso modoPercurso, @NonNull String enderecoOrigem, @NonNull String enderecoDestino, Usuario usuario, LocalTime horarioOrigem, SentidoPercurso sentidoPercurso) {
+    public Percurso(@NonNull List<Coordenada> pontos, @NonNull ModoPercurso modoPercurso, @NonNull SentidoPercurso sentidoPercurso, @NonNull String enderecoCasa, @NonNull Destino destino, @NonNull LocalTime horario) {
         this.pontos = pontos;
         this.modoPercurso = modoPercurso;
-        this.enderecoOrigem = enderecoOrigem;
-        this.enderecoDestino = enderecoDestino;
-        this.usuario = usuario;
-        this.horario = horarioOrigem;
         this.sentidoPercurso = sentidoPercurso;
+        this.enderecoCasa = enderecoCasa;
+        this.destino = destino;
+        this.horario = horario;
     }
 }

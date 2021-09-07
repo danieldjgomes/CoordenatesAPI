@@ -1,7 +1,7 @@
 package com.gomes.daniel.api.controller;
 
 import com.gomes.daniel.domain.repository.PercursoRepository;
-import com.gomes.daniel.service.CoordinateService;
+import com.gomes.daniel.service.CoordenadaService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Controller
 
-public class CoordinateController {
+public class CoordenadaController {
      private static final String MAPS_KEY = "AIzaSyAzXJTthZ-4MMQfiVSSfM9k1BP_5YjoEzo";
      private static final String SCHEME = "https";
      private static final String HOST = "maps.googleapis.com";
@@ -21,7 +21,7 @@ public class CoordinateController {
      private static final String KEYPARAM = "key={key}";
 
     @Autowired
-    private CoordinateService service;
+    private CoordenadaService service;
 
     @Autowired
     private PercursoRepository percursoRepository;

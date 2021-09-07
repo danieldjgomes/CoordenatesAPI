@@ -1,6 +1,8 @@
 package com.gomes.daniel.domain.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.*;
 import org.hibernate.validator.constraints.Email;
 import lombok.NoArgsConstructor;
@@ -39,7 +41,11 @@ public class Usuario implements Serializable {
     @Column(nullable = false)
     private Sexo sexo;
 
-    @Embedded
-    private Preferencias preferencias;
+    @ManyToOne
+    @JsonIgnoreProperties("usuarios")
+    private Parceiro parceiro;
 
+    @Embedded
+    @Column(nullable = true)
+    private Preferencias preferencias;
 }

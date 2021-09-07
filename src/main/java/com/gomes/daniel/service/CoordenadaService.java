@@ -1,22 +1,27 @@
 package com.gomes.daniel.service;
 
-import com.gomes.daniel.domain.model.Coordinate;
+import com.gomes.daniel.domain.model.Coordenada;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class CoordinateService {
+public class CoordenadaService {
 
     private static final double DEFAULT_PRECISION = 1E5;
 
-    public List<Coordinate> listCoord(String polyline){
+    private static final Logger logger = LoggerFactory.getLogger(CoordenadaService.class);
+
+    public List<Coordenada> listCoord(String polyline){
+        logger.info(polyline);
         return decodePolyToCoord(polyline);
     }
 
-    public List<Coordinate> decodePolyToCoord(String encoded) {
-        List<Coordinate> track = new ArrayList<>();
+    public List<Coordenada> decodePolyToCoord(String encoded) {
+        List<Coordenada> track = new ArrayList<>();
         double precision = DEFAULT_PRECISION;
         int index = 0;
         int lat = 0;
@@ -44,23 +49,34 @@ public class CoordinateService {
             int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
             lng += dlng;
 
-            Coordinate p = new Coordinate(lat / precision, lng / precision);
+            Coordenada p = new Coordenada(lat / precision, lng / precision);
             track.add(p);
         }
         return fitCoordinate(track);
     }
 
-    public List<Coordinate> fitCoordinate(List<Coordinate> coordinates){
-        int listSize = coordinates.size();
-        while (coordinates.size()>12){
+    public List<Coordenada> fitCoordinate(List<Coordenada> coordinates){
 
-            for (int i = 0; i < listSize; i=i+1){
-                listSize = coordinates.size();
-               if (i%2==1){
-                   coordinates.remove(i);
-               }
+//        logger.info(String.valueOf(coordinates.stream().count()));
+
+        var index = 0;
+        var toRemove = new ArrayList<>();
+        int escopo = coordinates.size()/16;
+
+        for(Coordenada coor : coordinates){
+            if(index % escopo != 0 && index != coordinates.size()-1){
+                toRemove.add(coor);
             }
+            index++;
         }
+        coordinates.removeAll(toRemove);
+
+        logger.info(String.valueOf(coordinates.stream().count()));
+        String log = "";
+//        for(Coordenada coor : coordinates){
+//            log += coor.getLat() + "," + coor.getLng()  + "\n";
+//        }
+//        logger.info(log);
         return  coordinates;
     }
 

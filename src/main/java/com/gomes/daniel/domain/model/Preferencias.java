@@ -1,7 +1,9 @@
 package com.gomes.daniel.domain.model;
 
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -13,18 +15,18 @@ import java.util.List;
 public class Preferencias implements Serializable {
 
     @OneToMany(cascade= CascadeType.ALL)
-    @OrderColumn(name = "_percursos")
+    @JoinTable(name = "usuario_percurso")
     @JsonIgnore
     private List<Percurso> percursos = new ArrayList<>();
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "_tipoUsuario")
+    @Column(name = "_tipoUsuario", nullable = true)
     private ModoLocomocao modoLocomocao;
 
-    @Column(name = "_toleranciaDistancia")
+    @Column(name = "_toleranciaDistancia", nullable = true)
     private Long toleranciaDistancia;
 
-    @Column(name = "_toleranciaTempo")
+    @Column(name = "_toleranciaTempo", nullable = true)
     private int toleranciaTempo;
 
 }

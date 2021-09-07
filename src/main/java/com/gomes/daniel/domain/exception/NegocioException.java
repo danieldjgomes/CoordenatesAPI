@@ -1,7 +1,10 @@
 package com.gomes.daniel.domain.exception;
 
 public class NegocioException extends Exception {
-    NegocioException (String e){
+    public NegocioException(String e){
         super(e);
+    }
+    public NegocioException() {
+        super("Ocorreu um erro de negócio!");
     }
 }
